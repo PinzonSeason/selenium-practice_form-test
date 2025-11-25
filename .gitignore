@@ -12,3 +12,6 @@ Thumbs.db
 # Reportes y logs
 *.log
 reports/
+venv/
+data/practice_form.db
+reports/screenshots/
