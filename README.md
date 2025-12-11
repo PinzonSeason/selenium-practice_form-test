@@ -36,5 +36,31 @@ Organización modular basada en buenas prácticas de automatización con Seleniu
 ### 1. Clonar el repositorio
 
 ```bash
-git clone https://github.com/tu-usuario/selenium-form-test.git
-cd selenium-form-test
+git clone git@github.com:PinzonSeason/selenium-practice_form-test.git
+cd selenium-form-test`````
+
+---
+
+##  Caso de Prueba Automatizado
+
+### Flujo actual:
+- Registro exitoso con datos válidos
+- Campos automatizados:
+  - Nombre
+  - Apellido
+  - Email
+  - Género
+  - Teléfono
+  - Envío del formulario
+
+
+---
+
+### 🧪 Ejemplo 2: Script en Python
+
+```markdown
+## 🐍 Script de prueba
+
+```python
+def test_form_submission():
+    assert submit_form() == "Success"
