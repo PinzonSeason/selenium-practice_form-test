@@ -5,6 +5,27 @@ import os
 
 fake = Faker("es_MX")  # localización en español de México
 
+# Mapeo de XPATH para State y City
+state_xpath_map = {
+    "NCR": "//*[@id='react-select-3-option-0']",
+    "Uttar Pradesh": "//*[@id='react-select-3-option-1']",
+    "Haryana": "//*[@id='react-select-3-option-2']",
+    "Rajasthan": "//*[@id='react-select-3-option-3']"
+}
+
+city_xpath_map = {
+    "Agra": "//*[@id='react-select-4-option-0']",
+    "Lucknow": "//*[@id='react-select-4-option-1']",
+    "Merrut": "//*[@id='react-select-4-option-2']",
+    "Delhi": "//*[@id='react-select-4-option-0']",
+    "Gurgaon": "//*[@id='react-select-4-option-1']",
+    "Noida": "//*[@id='react-select-4-option-2']",
+    "Karnal": "//*[@id='react-select-4-option-0']",
+    "Panipat": "//*[@id='react-select-4-option-1']",
+    "Jaipur": "//*[@id='react-select-4-option-0']",
+    "Jaiselmer": "//*[@id='react-select-4-option-1']"
+}
+
 def user_data():
     """Genera datos de usuario para el formulario DemoQA."""
     # Hobbies disponibles
@@ -33,7 +54,6 @@ def user_data():
         "last_name": fake.last_name(),
         "email": fake.email(),
         "phone": ''.join(filter(str.isdigit, fake.msisdn()))[:10],
-        # Fecha con mes completo
         "date_of_birth": fake.date_of_birth(minimum_age=18, maximum_age=60).strftime("%d %B %Y"),
         "subjects": selected_subjects,
         "hobbies": selected_hobbies,
@@ -41,4 +61,6 @@ def user_data():
         "current_address": fake.address(),
         "state": state,
         "city": city,
+        "state_xpath": state_xpath_map[state],
+        "city_xpath": city_xpath_map[city]
     }
