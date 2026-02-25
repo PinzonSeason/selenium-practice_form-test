@@ -4,6 +4,8 @@ from selenium.webdriver.common.keys import Keys
 from utils.wait_helpers import wait_for_visible
 from utils.data_factory import user_data
 from datetime import datetime
+from selenium.webdriver.support.ui import WebDriverWait 
+from selenium.webdriver.support import expected_conditions as EC
 
 def test_fill_form_extended(driver):
     data = user_data()
@@ -51,22 +53,25 @@ def test_fill_form_extended(driver):
 
     # Subjects
     subjects_input = driver.find_element(By.ID, "subjectsInput")
-    subjects_input.click()
     for subject in data["subjects"]:
-        subjects_input.send_keys(subject[0])
+        subjects_input.send_keys(subject)
         wait_for_visible(driver, (By.CSS_SELECTOR, ".subjects-auto-complete__menu"), timeout=10)
-        option = driver.find_element(
-            By.XPATH,
-            f"//div[contains(@id,'react-select-2-option') and normalize-space()='{subject}']"
-        )
+        
+        # Selecciona la opción cuyo texto contenga el subject
+        option = driver.find_element(By.XPATH, f"//div//child::div[contains(text(),'{subject}')]")
         option.click()
+        
+        # Validar que el chip se creó con el texto correcto
         chip = driver.find_element(
             By.XPATH,
             f"//div[contains(@class,'subjects-auto-complete__multi-value__label') and normalize-space()='{subject}']"
         )
         assert chip.text == subject
+
     chips = driver.find_elements(By.CSS_SELECTOR, ".subjects-auto-complete__multi-value__label")
     assert len(chips) >= 1
+
+
 
     # Hobbies
     hobby_map = {"Sports": "hobbies-checkbox-1", "Reading": "hobbies-checkbox-2", "Music": "hobbies-checkbox-3"}
@@ -87,18 +92,29 @@ def test_fill_form_extended(driver):
     address_input.send_keys(data["current_address"])
     assert address_input.get_attribute("value") == data["current_address"]
 
+    from selenium.webdriver.support.ui import WebDriverWait
+    from selenium.webdriver.support import expected_conditions as EC
+
     # State
-    state_input = driver.find_element(By.ID, "react-select-3-input")
-    state_input.send_keys(data["state"])
-    state_input.send_keys(Keys.ENTER)
-    state_chip = driver.find_element(By.CSS_SELECTOR, "#state .css-1uccc91-singleValue")
+    state_dropdown = driver.find_element(By.ID, "state")
+    state_dropdown.click()
+    driver.find_element(By.XPATH, data["state_xpath"]).click()
+
+    state_chip = driver.find_element(
+        By.XPATH,
+        "//div[@id='state']//div[contains(@class,'singleValue')]"
+    )
     assert state_chip.text == data["state"]
 
     # City
-    city_input = driver.find_element(By.ID, "react-select-4-input")
-    city_input.send_keys(data["city"])
-    city_input.send_keys(Keys.ENTER)
-    city_chip = driver.find_element(By.CSS_SELECTOR, "#city .css-1uccc91-singleValue")
+    city_dropdown = driver.find_element(By.ID, "city")
+    city_dropdown.click()
+    driver.find_element(By.XPATH, data["city_xpath"]).click()
+
+    city_chip = driver.find_element(
+        By.XPATH,
+        "//div[@id='city']//div[contains(@class,'singleValue')]"
+    )
     assert city_chip.text == data["city"]
 
     # Enviar formulario
