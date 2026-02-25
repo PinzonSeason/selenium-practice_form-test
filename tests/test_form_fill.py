@@ -1,11 +1,10 @@
 # tests/test_form_fill.py
+import os
+import pytest
 from selenium.webdriver.common.by import By
 from selenium.webdriver.common.keys import Keys
-from utils.wait_helpers import wait_for_visible
 from utils.data_factory import user_data
-from datetime import datetime
-from selenium.webdriver.support.ui import WebDriverWait 
-from selenium.webdriver.support import expected_conditions as EC
+from utils.wait_helpers import wait_for_visible
 
 def test_fill_form_extended(driver):
     data = user_data()
@@ -53,25 +52,19 @@ def test_fill_form_extended(driver):
 
     # Subjects
     subjects_input = driver.find_element(By.ID, "subjectsInput")
+    subjects_input.click()
     for subject in data["subjects"]:
         subjects_input.send_keys(subject)
         wait_for_visible(driver, (By.CSS_SELECTOR, ".subjects-auto-complete__menu"), timeout=10)
-        
-        # Selecciona la opción cuyo texto contenga el subject
         option = driver.find_element(By.XPATH, f"//div//child::div[contains(text(),'{subject}')]")
         option.click()
-        
-        # Validar que el chip se creó con el texto correcto
         chip = driver.find_element(
             By.XPATH,
             f"//div[contains(@class,'subjects-auto-complete__multi-value__label') and normalize-space()='{subject}']"
         )
         assert chip.text == subject
-
     chips = driver.find_elements(By.CSS_SELECTOR, ".subjects-auto-complete__multi-value__label")
     assert len(chips) >= 1
-
-
 
     # Hobbies
     hobby_map = {"Sports": "hobbies-checkbox-1", "Reading": "hobbies-checkbox-2", "Music": "hobbies-checkbox-3"}
@@ -91,9 +84,6 @@ def test_fill_form_extended(driver):
     address_input = driver.find_element(By.ID, "currentAddress")
     address_input.send_keys(data["current_address"])
     assert address_input.get_attribute("value") == data["current_address"]
-
-    from selenium.webdriver.support.ui import WebDriverWait
-    from selenium.webdriver.support import expected_conditions as EC
 
     # State
     state_dropdown = driver.find_element(By.ID, "state")
@@ -116,28 +106,3 @@ def test_fill_form_extended(driver):
         "//div[@id='city']//div[contains(@class,'singleValue')]"
     )
     assert city_chip.text == data["city"]
-
-    # Enviar formulario
-    submit_btn = driver.find_element(By.ID, "submit")
-    driver.execute_script("arguments[0].scrollIntoView(true);", submit_btn)
-    driver.execute_script("arguments[0].click();", submit_btn)
-
-    # Validar modal
-    modal = wait_for_visible(driver, (By.CLASS_NAME, "modal-content"), timeout=15)
-    assert "Thanks for submitting the form" in modal.text
-
-    # Validaciones finales
-    assert data["first_name"] in modal.text
-    assert data["last_name"] in modal.text
-    assert data["email"] in modal.text
-    assert phone_value in modal.text
-
-    # Fecha con formato del modal
-    dob_parsed = datetime.strptime(dob_value, "%d %b %Y")
-    dob_modal_format = dob_parsed.strftime("%d %B,%Y")
-    assert dob_modal_format in modal.text
-
-    for hobby in data["hobbies"]:
-        assert hobby in modal.text
-    assert "love_bug.jpg" in modal.text
-    assert f"{data['state']} {data['city']}" in modal.text

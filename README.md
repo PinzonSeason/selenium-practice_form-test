@@ -8,10 +8,11 @@ Este proyecto automatiza el flujo de registro en un formulario web de práctica 
 
 ## ⚙️ Tecnologías utilizadas
 
-- Python 3.13.9
+- Python 3.14.3
 - Selenium
 - WebDriver Manager
 - Pytest
+- Faker (para generación de datos)
 
 ---
 
@@ -20,6 +21,7 @@ Este proyecto automatiza el flujo de registro en un formulario web de práctica 
 Organización modular basada en buenas prácticas de automatización con Selenium y Pytest:
 
 | Carpeta / Archivo                 | Descripción breve                                       |
+|-----------------------------------|---------------------------------------------------------|
 | `tests/`                          | Contiene los casos de prueba automatizados              |
 | └── `test_valid_registration.py`  | Test funcional para registro exitoso                    |
 | `pages/`                          | Implementa el patrón Page Object Model                  |
@@ -27,40 +29,43 @@ Organización modular basada en buenas prácticas de automatización con Seleniu
 | `utils/`                          | Funciones auxiliares y configuración del navegador      |
 | └── `driver_setup.py`             | Inicializa el driver con WebDriver Manager              |
 | `README.md`                       | Documentación principal del proyecto                    |
-| `requirements.txt`                | Lista de dependencias del entorno virtual               |
+| `requirements.txt`                | Lista de dependencias esenciales                        |
+| `requirements-dev.txt`            | Dependencias opcionales para desarrollo/debugging       |
 | `venv/`                           | Entorno virtual local (excluido del repositorio)        |
-|                                   |                                                         |
+
+---
 
 ## 🚀 Instalación y ejecución
 
 ### 1. Clonar el repositorio
-
 ```bash
 git clone git@github.com:PinzonSeason/selenium-practice_form-test.git
-cd selenium-form-test`````
+cd selenium-practice_form-test
+```
 
 ---
 
-##  Caso de Prueba Automatizado
+## Crear y activar entorno virtual
+### En powerShell:
+```bash
+python -m venv venv
+.\venv\Scripts\Activate.ps1
+```
+### En CMD:
+```bash
+- venv\Scripts\activate.bat
+```
+---
 
-### Flujo actual:
-- Registro exitoso con datos válidos
-- Campos automatizados:
-  - Nombre
-  - Apellido
-  - Email
-  - Género
-  - Teléfono
-  - Envío del formulario
-
+## Instalar dependencias
+```bash
+pip install -r requirements.txt
+```
 
 ---
 
-### 🧪 Ejemplo 2: Script en Python
+## Ejecutar pruebas
+```bash
+pytest -v
+```
 
-```markdown
-## 🐍 Script de prueba
-
-```python
-def test_form_submission():
-    assert submit_form() == "Success"
